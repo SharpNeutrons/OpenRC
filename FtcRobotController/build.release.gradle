@@ -10,6 +10,7 @@ dependencies {
     openrcImplementation project(':Blocks')
     openrcImplementation project(':Hardware')
     openrcImplementation project(':FtcCommon')
+    implementation project(':PcInterface')
 
     stockImplementation(name: 'Inspection-release', ext: 'aar')
     stockImplementation(name: 'Blocks-release', ext: 'aar')

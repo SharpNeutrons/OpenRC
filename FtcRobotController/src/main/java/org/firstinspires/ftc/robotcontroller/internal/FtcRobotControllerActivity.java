@@ -91,6 +91,7 @@ import com.qualcomm.robotcore.util.RobotLog;
 import com.qualcomm.robotcore.wifi.NetworkConnectionFactory;
 import com.qualcomm.robotcore.wifi.NetworkType;
 import com.qualcomm.robotcore.wifi.WifiDirectAssistant;
+import com.sharpneutrons.pcinterface.PcInterface;
 
 import org.firstinspires.ftc.ftccommon.external.SoundPlayingRobotMonitor;
 import org.firstinspires.ftc.ftccommon.internal.FtcRobotControllerWatchdogService;
@@ -334,6 +335,8 @@ public class FtcRobotControllerActivity extends Activity {
         ServiceController.startService(FtcRobotControllerWatchdogService.class);
         bindToService();
         logPackageVersions();
+
+        PcInterface.start(context);
     }
 
     protected UpdateUI createUpdateUI() {
@@ -415,6 +418,8 @@ public class FtcRobotControllerActivity extends Activity {
 
         preferencesHelper.getSharedPreferences().unregisterOnSharedPreferenceChangeListener(sharedPreferencesListener);
         RobotLog.cancelWriteLogcatToDisk();
+
+        PcInterface.stop();
     }
 
     protected void bindToService() {
@@ -579,6 +584,8 @@ public class FtcRobotControllerActivity extends Activity {
                 return service.getRobot().eventLoopManager;
             }
         });
+
+        PcInterface.attachWebServer(service.getWebServer());
     }
 
     private void updateUIAndRequestRobotSetup() {

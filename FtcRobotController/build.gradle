@@ -6,8 +6,8 @@ apply plugin: 'com.android.library'
 android {
 
     defaultConfig {
-        minSdkVersion 19
-        targetSdkVersion 19
+        minSdkVersion 23
+        targetSdkVersion 26
     }
 
     flavorDimensions 'type'
@@ -31,7 +31,7 @@ android {
         }
     }
 
-    compileSdkVersion 23
+    compileSdkVersion 26
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
