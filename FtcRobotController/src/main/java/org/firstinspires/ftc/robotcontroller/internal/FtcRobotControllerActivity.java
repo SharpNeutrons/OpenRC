@@ -482,7 +482,6 @@ public class FtcRobotControllerActivity extends Activity {
         }
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.ftc_robot_controller, menu);
@@ -621,6 +620,8 @@ public class FtcRobotControllerActivity extends Activity {
         controllerService.setupRobot(eventLoop, idleLoop);
 
         passReceivedUsbAttachmentsToEventLoop();
+
+        PcInterface.attachEventLoop(eventLoop);
     }
 
     protected OpModeRegister createOpModeRegister() {

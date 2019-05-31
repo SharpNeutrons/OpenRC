@@ -33,21 +33,19 @@ public class PcInterfaceWebSocketServer extends NanoWSD {
 		return new PcInterfaceWebSocket(handshake, pcInterface);
 	}
 
-	@Override
-	public Response serve(IHTTPSession session) {
-		Map<String, String> parms = session.getParms();
-		String param = parms.get("params");
-		String action = parms.get("action");
-		String delay = parms.get("delay");
-
-		try {
-			Response r = newChunkedResponse(Response.Status.OK, MIME_HTML, ctx.getAssets().open("pcInterface.html"));
-			return r;
-		} catch (IOException e) {
-			Log.e(PcInterface.TAG, "server: ", e);
-			return newFixedLengthResponse(Response.Status.NOT_FOUND,
-					MIME_PLAINTEXT, "404 Not found");
-		}
-	}
+//	@Override
+//	public Response serve(IHTTPSession session) {
+////		Map<String, String> parms = session.getParms();
+////		String param = parms.get("params");
+////		String action = parms.get("action");
+////		String delay = parms.get("delay");
+//		try {
+//			return newChunkedResponse(Response.Status.OK, MIME_HTML, ctx.getAssets().open("pcInterface.html"));
+//		} catch (IOException e) {
+//			Log.e(PcInterface.TAG, "server: ", e);
+//			return newFixedLengthResponse(Response.Status.NOT_FOUND,
+//					MIME_PLAINTEXT, "404 Not found");
+//		}
+//	}
 
 }

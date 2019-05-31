@@ -47,6 +47,7 @@ import org.firstinspires.ftc.robotcore.internal.ui.GamepadUser;
 import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 /**
@@ -97,12 +98,12 @@ public class Gamepad extends RobocolParsableBase {
     }
 
     /**
-     * left analog stick horizontal axis
+     * left analog stick horizontal axis (also x on 3d pro)
      */
     public float left_stick_x = 0f;
 
     /**
-     * left analog stick vertical axis
+     * left analog stick vertical axis (also y on 3d pro)
      */
     public float left_stick_y = 0f;
 
@@ -590,9 +591,9 @@ public class Gamepad extends RobocolParsableBase {
         buttons += "right stick button ";
       }
 
-        return String.format("ID: %2d user: %2d lx: % 1.2f ly: % 1.2f rx: % 1.2f ry: % 1.2f lt: %1.2f rt: %1.2f %s",
-                id, user, left_stick_x, left_stick_y,
-                right_stick_x, right_stick_y, left_trigger, right_trigger, buttons);
+        return String.format(Locale.US, "ID: %2d user: %2d lx: % 1.2f ly: % 1.2f rx: % 1.2f ry: % 1.2f lt: %1.2f rt: %1.2f %s",
+                id, user, left_stick_x, left_stick_y, right_stick_x, right_stick_y,
+                left_trigger, right_trigger, buttons);
     }
 
     // clean values

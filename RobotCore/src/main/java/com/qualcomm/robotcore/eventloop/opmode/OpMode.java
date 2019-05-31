@@ -31,9 +31,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.robotcore.eventloop.opmode;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.KinectAngles;
+import com.qualcomm.robotcore.hardware.LogitechJoystick;
 import com.qualcomm.robotcore.robocol.TelemetryMessage;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.internal.opmode.TelemetryImpl;
@@ -56,6 +61,13 @@ public abstract class OpMode {
      * Gamepad 2
      */
     public Gamepad gamepad2 = null;   // will be set in OpModeManager.runActiveOpMode
+
+    public LogitechJoystick joystick = null;
+
+    private ElapsedTime joystickTimeElapsed = new ElapsedTime();
+    private final double MS_JOYSTICK_TIMEOUT = 150;
+
+	public KinectAngles armAngles = null;
 
     /**
      * The {@link #telemetry} field contains an object in which a user may accumulate data which
@@ -240,6 +252,14 @@ public abstract class OpMode {
      */
     public final void internalUpdateTelemetryNow(TelemetryMessage telemetry) {
         this.internalOpModeServices.refreshUserTelemetry(telemetry, 0);
+    }
+
+    public void resetJoystickTimeout () {
+    	joystickTimeElapsed.reset();
+    }
+
+    public boolean getJoystickTimeout () {
+    	return joystickTimeElapsed.milliseconds() > MS_JOYSTICK_TIMEOUT;
     }
 
 }

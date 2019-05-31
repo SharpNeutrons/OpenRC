@@ -6,7 +6,10 @@ import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.EventLoop;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.KinectAngles;
+import com.qualcomm.robotcore.hardware.LogitechJoystick;
 import com.sharpneutrons.pcinterface.message.Message;
+import com.sharpneutrons.pcinterface.message.MessageType;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.internal.android.dex.TableOfContents;
@@ -20,8 +23,11 @@ import org.firstinspires.ftc.robotcore.internal.webserver.WebServer;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import fi.iki.elonen.NanoHTTPD;
+import fi.iki.elonen.NanoWSD;
 
 public class PcInterface implements OpModeManagerImpl.Notifications{
 
@@ -72,6 +78,8 @@ public class PcInterface implements OpModeManagerImpl.Notifications{
 		return instance;
 	}
 
+	private Timer pingTimer;
+
 	private List<PcInterfaceWebSocket> sockets;
 	private PcInterfaceWebSocketServer server;
 	private OpModeManagerImpl opModeManager;
@@ -94,6 +102,20 @@ public class PcInterface implements OpModeManagerImpl.Notifications{
 		assetManager = context.getAssets();
 		assetFiles = new ArrayList<>();
 		buildAssetsFileList("pcInterface");
+
+		pingTimer = new Timer();
+		pingTimer.scheduleAtFixedRate(new TimerTask() {
+			@Override
+			public void run() {
+				for (PcInterfaceWebSocket socket:sockets) {
+					try {
+						socket.ping(new byte[]{1, 0});
+					} catch (IOException e) {
+						Log.e(TAG, "Socket Ping", e);
+					}
+				}
+			}
+		}, 0, 1000);
 	}
 
 	private WebHandler newStaticAssetHandler(final String file) {
@@ -139,11 +161,11 @@ public class PcInterface implements OpModeManagerImpl.Notifications{
 	 */
 	private void internalAttachWebServer(WebServer webServer) {
 		WebHandlerManager manager = webServer.getWebHandlerManager();
-		manager.register("", newStaticAssetHandler("index.html"));
-		manager.register("/pcInterface", newStaticAssetHandler("index.html"));
+		//manager.register("", newStaticAssetHandler("index.html"));
+		//manager.register("/pcInterface", newStaticAssetHandler("index.html"));
 
-		manager.register("/pcInterface", newStaticAssetHandler("pcInterface/index.html"));
-		manager.register("/pcInterface/", newStaticAssetHandler("pcInterface/index.html"));
+		manager.register("/pcInterface", newStaticAssetHandler("pcInterface.html"));
+		manager.register("/pcInterface/", newStaticAssetHandler("pcInterface.html"));
 		for (final String file : assetFiles) {
 			manager.register("/" + file, newStaticAssetHandler(file));
 		}
@@ -180,16 +202,17 @@ public class PcInterface implements OpModeManagerImpl.Notifications{
 		sockets.remove(socket);
 	}
 
-	synchronized void onMessage(PcInterfaceWebSocket socket, Message msg) {
-		Telemetry telemetry = opModeManager.getActiveOpMode().telemetry;
+	synchronized void onMessage(PcInterfaceWebSocket socket, Message msg)   {
 
 		switch (msg.getType()) {
 			case JOYSTICK_DATA: {
-				//TODO might have to be something different to get the actual data
-				telemetry.addData("Joystick: ", msg.getData().toString());
+				opModeManager.getActiveOpMode().joystick = (LogitechJoystick)msg.getData();
+				opModeManager.getActiveOpMode().resetJoystickTimeout();
+				break;
 			}
 			case KINECT_SKELETON: {
-				telemetry.addData("Kinect Skeleton: ", msg.getData().toString());
+				opModeManager.getActiveOpMode().armAngles = (KinectAngles) msg.getData();
+				break;
 			}
 		}
 	}

@@ -87,10 +87,10 @@ public class SessionCookie extends NanoHTTPD.Cookie {
 
     @Override
     public String getHTTPHeader() {
-        if (this.e == null || this.e.length() == 0) {
-            return String.format(Locale.US, "%s=%s", this.n, this.v);
-        } else {
+        //if (this.e == null || this.e.length() == 0) {
+          //  return String.format(Locale.US, "%s=%s", this.n, this.v);
+        //} else {
             return super.getHTTPHeader();
-        }
+        //}
     }
 }

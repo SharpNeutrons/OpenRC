@@ -45,7 +45,9 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.KinectAngles;
 import com.qualcomm.robotcore.hardware.LightSensor;
+import com.qualcomm.robotcore.hardware.LogitechJoystick;
 import com.qualcomm.robotcore.hardware.RobotCoreLynxUsbDevice;
 import com.qualcomm.robotcore.hardware.ServoController;
 import com.qualcomm.robotcore.robocol.Command;
@@ -292,6 +294,15 @@ public class OpModeManagerImpl implements OpModeServices, OpModeManagerNotifier 
         activeOpMode.time = activeOpMode.getRuntime();
         activeOpMode.gamepad1 = gamepads[0];
         activeOpMode.gamepad2 = gamepads[1];
+
+        if (activeOpMode.joystick == null) {
+	        activeOpMode.joystick = new LogitechJoystick(new byte[]{0, 126, 126, 126, -1, 0, 0});
+        }
+
+        if (activeOpMode.armAngles == null) {
+        	activeOpMode.armAngles = new KinectAngles(0, 0, 180);
+        }
+//	    activeOpMode.resetJoystickTimeout();
 
         // Robustly ensure that gamepad state from previous opmodes doesn't
         // leak into new opmodes.
